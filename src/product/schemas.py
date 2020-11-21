@@ -2,9 +2,11 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
+from constants import GroupId, ProductId
+
 
 class GroupEntity(BaseModel):
-    id: int
+    id: GroupId
     name: str
     parent: Optional[str]
 
@@ -23,16 +25,16 @@ class GroupSchema(BaseModel):
 class GroupUpdateSchema(BaseModel):
     name: Optional[str] = None
     parent: Optional[str] = None
-    parent_id: Optional[int] = None
+    parent_id: Optional[GroupId] = None
 
     class Config:
         orm_mode = True
 
 
 class ProductEntity(BaseModel):
-    id: int
+    id: ProductId
     name: str
-    group_id: int
+    group_id: GroupId
 
     class Config:
         orm_mode = True
@@ -40,7 +42,7 @@ class ProductEntity(BaseModel):
 
 class ProductCreateSchema(BaseModel):
     name: str
-    group_id: int
+    group_id: GroupId
 
     class Config:
         orm_mode = True
@@ -54,7 +56,7 @@ class ProductCreateSchema(BaseModel):
 
 class ProductUpdateSchema(BaseModel):
     name: Optional[str]
-    group_id: Optional[int]
+    group_id: Optional[GroupId]
 
     class Config:
         orm_mode = True
@@ -64,3 +66,19 @@ class ProductUpdateSchema(BaseModel):
                 "group_id": 1,
             }
         }
+
+
+class ProductGroupSchema(BaseModel):
+    id: GroupId
+    name: str
+
+    class Config:
+        orm_mode = True
+
+
+class ProductListSchema(BaseModel):
+    name: Optional[str]
+    group: ProductGroupSchema
+
+    class Config:
+        orm_mode = True

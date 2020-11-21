@@ -12,6 +12,7 @@ from src.product.schemas import (
     GroupUpdateSchema,
     ProductCreateSchema,
     ProductUpdateSchema,
+    ProductListSchema,
 )
 
 product_group_router = APIRouter()
@@ -96,6 +97,11 @@ async def update_product(product_id: ProductId, schema: ProductUpdateSchema):
 async def update_product(product_id: ProductId):
     await product_repo.delete(id=product_id)
     return Status(message=f"Product has been deleted: {product_id}")
+
+
+@product_router.get("/product/{group_id}", response_model=List[ProductListSchema])
+async def get_product(group_id: GroupId):
+    return await product_repo.get_nested_products(group_id)
 
 
 # </editor-fold>

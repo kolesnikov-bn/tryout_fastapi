@@ -11,8 +11,7 @@ class Group(models.Model):
     products: fields.ReverseRelation["Product"]
 
     class PydanticMeta:
-        allow_cycles = True
-        max_recursion = 4
+        allow_cycles = False
         exclude = ("children", "group", "products")
 
     def __str__(self):

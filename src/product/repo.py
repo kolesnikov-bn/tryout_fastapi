@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from tortoise.exceptions import DoesNotExist, IntegrityError
 
@@ -71,6 +71,9 @@ class GroupRepo(DBRepo):
 class ProductRepo(DBRepo):
     model = Product
     get_schema = ProductPDModel
+
+    async def get_nested_products(self, group_id: GroupId) -> List[Product]:
+        return await self.model.filter(group_id=group_id).prefetch_related("group")
 
 
 group_repo = GroupRepo()
