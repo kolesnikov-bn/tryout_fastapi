@@ -1,5 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
+from tortoise import Tortoise
 from tortoise.contrib.fastapi import register_tortoise
 
 import settings
@@ -17,6 +18,10 @@ register_tortoise(
     add_exception_handlers=True,
 )
 
+
+@app.on_event("startup")
+async def startup_event():
+    Tortoise.init_models(settings.APPS_MODELS, "models")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000, debug=settings.DEBUG)
