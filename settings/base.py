@@ -7,4 +7,4 @@ DEBUG = True
 API = "/api"
 
 DATABASE_URI = f"sqlite:///{BASE_DIR}/db.sqlite3"
-APPS_MODELS = ["src.product.models"]
+APPS_MODELS = ["src.product.models", "src.user.models"]

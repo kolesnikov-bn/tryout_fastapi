@@ -4,8 +4,8 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from tortoise.contrib.fastapi import HTTPNotFoundError
 
-from constants import GroupId, ProductId
-from product.models import GroupPDModel, ProductPDModel
+from src.constants import GroupId, ProductId
+from src.product.models import GroupPDModel, ProductPDModel
 from src.product.repo import group_repo, product_repo
 from src.product.schemas import (
     GroupSchema,

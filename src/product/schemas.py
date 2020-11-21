@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from constants import GroupId, ProductId
+from src.constants import GroupId, ProductId
 
 
 class GroupEntity(BaseModel):
