@@ -11,6 +11,11 @@ fastapi = "*"
 uvicorn = "*"
 pytest = "*"
 aerich = "*"
+passlib = "*"
+bcrypt = "*"
+pyjwt = "*"
+python-jose = "*"
+python-multipart = "*"
 
 [requires]
 python_version = "3.9"

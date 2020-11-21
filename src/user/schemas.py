@@ -1,10 +1,13 @@
-from pydantic import BaseModel, Extra
+from typing import Optional
+
+from pydantic import BaseModel
 
 
 class UserEntity(BaseModel):
     username: str
     first_name: str
     last_name: str
+    disabled: Optional[bool] = None
 
     class Config:
         orm_mode = True

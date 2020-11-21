@@ -7,6 +7,7 @@ class User(models.Model):
     first_name = fields.CharField(max_length=50, null=True)
     last_name = fields.CharField(max_length=50, null=True)
     password = fields.CharField(max_length=128, null=True)
+    disabled = fields.BooleanField(default=False)
 
     def full_name(self) -> str:
         if self.first_name or self.last_name:
@@ -16,8 +17,7 @@ class User(models.Model):
 
     class PydanticMeta:
         computed = ["full_name"]
-        exclude = ["password"]
 
 
 UserPDModel = pydantic_model_creator(User, name="User")
-UserInPDModel = pydantic_model_creator(User, name="UserIn", exclude_readonly=True)
+UserInPDModel = pydantic_model_creator(User, name="UserIn", exclude_readonly=True, exclude=("password", ))
