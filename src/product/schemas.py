@@ -27,3 +27,40 @@ class GroupUpdateSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class ProductEntity(BaseModel):
+    id: int
+    name: str
+    group_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class ProductCreateSchema(BaseModel):
+    name: str
+    group_id: int
+
+    class Config:
+        orm_mode = True
+        schema_extra = {
+            "example": {
+                "name": "string",
+                "group_id": 1,
+            }
+        }
+
+
+class ProductUpdateSchema(BaseModel):
+    name: Optional[str]
+    group_id: Optional[int]
+
+    class Config:
+        orm_mode = True
+        schema_extra = {
+            "example": {
+                "name": "string",
+                "group_id": 1,
+            }
+        }

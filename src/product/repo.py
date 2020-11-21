@@ -2,9 +2,8 @@ from typing import Optional
 
 from tortoise.exceptions import DoesNotExist, IntegrityError
 
-from product.models import GroupPDModel
 from src.constants import GroupId
-from src.product.models import Group
+from src.product.models import Group, GroupPDModel, ProductPDModel, Product
 from src.product.schemas import GroupSchema, GroupUpdateSchema
 from src.repositories import DBRepo
 
@@ -69,4 +68,10 @@ class GroupRepo(DBRepo):
             await child.save()
 
 
+class ProductRepo(DBRepo):
+    model = Product
+    get_schema = ProductPDModel
+
+
 group_repo = GroupRepo()
+product_repo = ProductRepo()

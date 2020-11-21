@@ -4,18 +4,25 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from tortoise.contrib.fastapi import HTTPNotFoundError
 
-from constants import GroupId
-from product.models import GroupPDModel
-from src.product.repo import group_repo
-from src.product.schemas import GroupSchema, GroupUpdateSchema
+from constants import GroupId, ProductId
+from product.models import GroupPDModel, ProductPDModel
+from src.product.repo import group_repo, product_repo
+from src.product.schemas import (
+    GroupSchema,
+    GroupUpdateSchema,
+    ProductCreateSchema,
+    ProductUpdateSchema,
+)
 
 product_group_router = APIRouter()
+product_router = APIRouter()
 
 
 class Status(BaseModel):
     message: str
 
 
+# <editor-fold desc="Groups">
 @product_group_router.get("/group", response_model=List[GroupPDModel])
 async def get_groups():
     return await group_repo.all()
@@ -55,4 +62,40 @@ async def update_group(group_id: GroupId, schema: GroupUpdateSchema):
 )
 async def delete_group(group_id: GroupId):
     await group_repo.delete_node(group_id)
-    return Status(message=f"Deleted group: {group_id}")
+    return Status(message=f"Group has been deleted: {group_id}")
+
+
+# </editor-fold>
+
+
+# <editor-fold desc="Products">
+@product_router.get("/product", response_model=List[ProductPDModel])
+async def get_products():
+    return await product_repo.all()
+
+
+@product_router.post("/product", response_model=ProductPDModel)
+async def create_product(schema: ProductCreateSchema):
+    return await product_repo.create(schema)
+
+
+@product_router.put(
+    "/product/{product_id}",
+    response_model=ProductPDModel,
+    responses={404: {"model": HTTPNotFoundError}},
+)
+async def update_product(product_id: ProductId, schema: ProductUpdateSchema):
+    return await product_repo.update(schema, id=product_id)
+
+
+@product_router.delete(
+    "/product/{product_id}",
+    response_model=Status,
+    responses={404: {"model": HTTPNotFoundError}},
+)
+async def update_product(product_id: ProductId):
+    await product_repo.delete(id=product_id)
+    return Status(message=f"Product has been deleted: {product_id}")
+
+
+# </editor-fold>
