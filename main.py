@@ -1,9 +1,10 @@
 import uvicorn
 from fastapi import FastAPI
-from tortoise import Tortoise
+from tortoise import run_async
 from tortoise.contrib.fastapi import register_tortoise
 
 import settings
+from initialize import init
 from src import routers
 from src.auth.router import auth_router
 
@@ -21,9 +22,6 @@ register_tortoise(
 )
 
 
-@app.on_event("startup")
-async def startup_event():
-    Tortoise.init_models(settings.APPS_MODELS, "models")
-
 if __name__ == "__main__":
+    run_async(init())
     uvicorn.run(app, host="127.0.0.1", port=8000, debug=settings.DEBUG)

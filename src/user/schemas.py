@@ -8,7 +8,7 @@ class UserEntity(BaseModel):
     first_name: str
     last_name: str
     disabled: Optional[bool] = None
-    permissions: Any
+
 
     class Config:
         orm_mode = True
@@ -16,6 +16,7 @@ class UserEntity(BaseModel):
 
 class UserSchema(UserEntity):
     full_name: str
+    permissions: Any
 
     class Config:
         orm_mode = True

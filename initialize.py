@@ -7,6 +7,8 @@ import settings
 from src.models import GroupPDModel, Group, Product
 from src.product.repo import group_repo, product_repo
 from src.product.schemas import GroupSchema, ProductInDBSchema, GroupUpdateSchema
+from src.user.repo import user_repo
+from src.user.schemas import UserCreateSchema
 
 prime_csv_file = settings.BASE_DIR / "init_data.csv"
 
@@ -80,10 +82,22 @@ def make_group_schemas(
     return schemas
 
 
+async def create_users():
+    user_schema = UserCreateSchema(
+        username="admin",
+        first_name="name",
+        last_name="last-name",
+        disabled=False,
+        password="secret",
+    )
+    await user_repo.create_user(user_schema)
+
+
 async def main():
     csv_data = read_csv(prime_csv_file)
     await fill_primary_group_data(csv_data)
     await fill_primary_product_data(csv_data)
+    await create_users()
 
 
 async def init():
