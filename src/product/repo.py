@@ -14,7 +14,7 @@ class GroupRepo(DBRepo):
 
     async def create_node(self, schema: GroupSchema) -> Optional[GroupPDModel]:
         if schema.parent is None:
-            return self._create_new_root(schema)
+            return await self._create_new_root(schema)
 
         parent = await self._find_parent_node_by_name(schema)
         return await self._create_leaf_node(schema, parent.id)
@@ -42,7 +42,7 @@ class GroupRepo(DBRepo):
         return await self.get_schema.from_tortoise_orm(entry)
 
     async def _create_new_root(self, schema: GroupSchema) -> GroupPDModel:
-        return self.create(schema)
+        return await self.create(schema)
 
     async def _find_parent_node_by_name(
         self, schema: GroupUpdateSchema

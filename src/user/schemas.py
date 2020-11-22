@@ -8,6 +8,7 @@ class UserEntity(BaseModel):
     first_name: str
     last_name: str
     disabled: Optional[bool] = None
+    permissions: Any
 
     class Config:
         orm_mode = True

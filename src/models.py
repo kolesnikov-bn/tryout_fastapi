@@ -58,11 +58,10 @@ class Product(models.Model):
 
 Tortoise.init_models(["src.models"], "models")
 
-UserPDModel = pydantic_model_creator(User, name="User")
+UserPDModel = pydantic_model_creator(User, name="User", exclude=("permissions", ))
 UserInPDModel = pydantic_model_creator(
     User, name="UserIn", exclude_readonly=True, exclude=("password",)
 )
 PermissionPDModel = pydantic_model_creator(Permission, name="Permission")
-GroupPDModel = pydantic_model_creator(Group, name="GroupPDModel", exclude=("children",))
+GroupPDModel = pydantic_model_creator(Group, name="GroupPDModel", exclude=("children", "permissions"))
 ProductPDModel = pydantic_model_creator(Product, name="ProductPDModel")
-print(UserPDModel.schema_json(indent=4))
