@@ -6,7 +6,7 @@ from jose import jwt, JWTError
 
 import settings
 from src.auth.schemas import TokenData
-from src.user.models import UserPDModel, User
+from src.models import User, UserPDModel
 from src.user.schemas import UserEntity
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=settings.TOKEN_URL)

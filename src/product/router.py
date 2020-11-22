@@ -6,7 +6,7 @@ from tortoise.contrib.fastapi import HTTPNotFoundError
 
 from src.auth.jwt import get_current_active_user
 from src.constants import GroupId, ProductId
-from src.product.models import GroupPDModel, ProductPDModel
+from src.models import GroupPDModel, ProductPDModel
 from src.product.repo import group_repo, product_repo
 from src.product.schemas import (
     GroupSchema,

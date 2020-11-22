@@ -1,0 +1,57 @@
+from tortoise import models, fields, Tortoise
+from tortoise.contrib.pydantic import pydantic_model_creator
+
+
+class User(models.Model):
+    username = fields.CharField(max_length=20, unique=True)
+    first_name = fields.CharField(max_length=50, null=True)
+    last_name = fields.CharField(max_length=50, null=True)
+    password = fields.CharField(max_length=128, null=True)
+    disabled = fields.BooleanField(default=False)
+
+    def full_name(self) -> str:
+        if self.first_name or self.last_name:
+            return f"{self.first_name or ''} {self.last_name or ''}".strip()
+
+        return self.username
+
+    class PydanticMeta:
+        computed = ["full_name"]
+
+
+class Permission(models.Model):
+    name = fields.CharField(max_length=40, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Group(models.Model):
+    name = fields.CharField(max_length=150, unique=True)
+    parent: fields.ForeignKeyNullableRelation["Group"] = fields.ForeignKeyField(
+        "models.Group", related_name="children", null=True
+    )
+
+    class PydanticMeta:
+        allow_cycles = False
+        exclude = ("children", "group", "products")
+
+    def __str__(self):
+        return f"{self.__class__.__name__}({self.name})"
+
+
+class Product(models.Model):
+    name = fields.CharField(max_length=150)
+    group = fields.ForeignKeyField("models.Group", related_name="products")
+
+
+Tortoise.init_models(["src.models"], "models")
+
+UserPDModel = pydantic_model_creator(User, name="User")
+UserInPDModel = pydantic_model_creator(
+    User, name="UserIn", exclude_readonly=True, exclude=("password",)
+)
+PermissionPDModel = pydantic_model_creator(Permission, name="Permission")
+GroupPDModel = pydantic_model_creator(Group, name="GroupPDModel", exclude=("children",))
+ProductPDModel = pydantic_model_creator(Product, name="ProductPDModel")
+print(UserPDModel.schema_json(indent=4))

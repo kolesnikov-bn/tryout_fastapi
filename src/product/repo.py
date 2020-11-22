@@ -3,7 +3,7 @@ from typing import Optional, List
 from tortoise.exceptions import DoesNotExist, IntegrityError
 
 from src.constants import GroupId
-from src.product.models import Group, GroupPDModel, ProductPDModel, Product
+from src.models import Group, Product, GroupPDModel, ProductPDModel
 from src.product.schemas import GroupSchema, GroupUpdateSchema
 from src.repositories import DBRepo
 

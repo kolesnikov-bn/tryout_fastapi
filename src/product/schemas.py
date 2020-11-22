@@ -14,7 +14,7 @@ class GroupEntity(BaseModel):
         orm_mode = True
 
 
-class GroupSchema(BaseModel):
+class GroupSchema(GroupEntity):
     name: str = Field(..., description="Leaf node name")
     parent: Optional[str] = Field(None, description="Parent node name")
 

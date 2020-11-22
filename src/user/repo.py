@@ -1,8 +1,8 @@
 from typing import Optional
 
 from src.auth.security import get_password_hash, verify_password
+from src.models import User, UserPDModel
 from src.repositories import DBRepo
-from src.user.models import User, UserPDModel
 from src.user.schemas import UserCreateSchema, UserEntity
 
 
