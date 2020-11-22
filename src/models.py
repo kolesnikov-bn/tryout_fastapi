@@ -8,6 +8,7 @@ class User(models.Model):
     last_name = fields.CharField(max_length=50, null=True)
     password = fields.CharField(max_length=128, null=True)
     disabled = fields.BooleanField(default=False)
+    permissions: fields.ManyToManyRelation["UserGroupPermission"]
 
     def full_name(self) -> str:
         if self.first_name or self.last_name:
@@ -19,25 +20,35 @@ class User(models.Model):
         computed = ["full_name"]
 
 
-class Permission(models.Model):
-    name = fields.CharField(max_length=40, unique=True)
-
-    def __str__(self):
-        return self.name
-
-
 class Group(models.Model):
     name = fields.CharField(max_length=150, unique=True)
     parent: fields.ForeignKeyNullableRelation["Group"] = fields.ForeignKeyField(
         "models.Group", related_name="children", null=True
     )
+    permissions: fields.ManyToManyRelation["UserGroupPermission"]
 
     class PydanticMeta:
         allow_cycles = False
         exclude = ("children", "group", "products")
 
     def __str__(self):
-        return f"{self.__class__.__name__}({self.name})"
+        return f"<{self.__class__.__name__}>: {self.name}"
+
+
+class UserGroupPermission(models.Model):
+    user = fields.ForeignKeyField("models.User", related_name="permissions")
+    group = fields.ForeignKeyField("models.Group", related_name="permissions")
+    permission = fields.ForeignKeyField("models.Permission", related_name="children")
+
+    class Meta:
+        table = "user_group_permission"
+
+
+class Permission(models.Model):
+    name = fields.CharField(max_length=40, unique=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Product(models.Model):
