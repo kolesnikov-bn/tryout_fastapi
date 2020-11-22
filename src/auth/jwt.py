@@ -1,15 +1,13 @@
 from datetime import datetime, timedelta
 
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
-from starlette import status
 
 import settings
 from src.auth.schemas import TokenData
 from src.user.models import UserPDModel, User
 from src.user.schemas import UserEntity
-
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=settings.TOKEN_URL)
 
@@ -56,8 +54,8 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserEntity:
     return user
 
 
-async def get_current_active_user(current_user: UserEntity = Depends(get_current_user)):
-    if current_user.disabled:
+async def get_current_active_user(user: UserEntity = Depends(get_current_user)):
+    if user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
 
-    return current_user
+    return user

@@ -20,5 +20,5 @@ async def create_user(schema: UserCreateSchema):
 
 
 @user_router.get("/user/self/", response_model=UserEntity)
-async def try_yourself(current_user: UserEntity = Depends(get_current_active_user)):
-    return current_user
+async def try_yourself(user: UserEntity = Depends(get_current_active_user)):
+    return user

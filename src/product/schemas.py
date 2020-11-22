@@ -40,23 +40,9 @@ class ProductEntity(BaseModel):
         orm_mode = True
 
 
-class ProductCreateSchema(BaseModel):
+class ProductInDBSchema(BaseModel):
     name: str
     group_id: GroupId
-
-    class Config:
-        orm_mode = True
-        schema_extra = {
-            "example": {
-                "name": "string",
-                "group_id": 1,
-            }
-        }
-
-
-class ProductUpdateSchema(BaseModel):
-    name: Optional[str]
-    group_id: Optional[GroupId]
 
     class Config:
         orm_mode = True
