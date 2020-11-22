@@ -4,6 +4,7 @@ from typing import List
 from tortoise import Tortoise, run_async
 
 import settings
+from src.models import GroupPDModel, Group, Product
 from src.product.repo import group_repo, product_repo
 from src.product.schemas import GroupSchema, ProductInDBSchema, GroupUpdateSchema
 
@@ -48,7 +49,7 @@ async def fill_primary_product_data(items: List[CSVItem]) -> None:
         await product_repo.create(layer_schema)
 
 
-async def make_product_schemas(items: List[CSVItem]) -> List[GroupSchema]:
+async def make_product_schemas(items: List[CSVItem]) -> List[ProductInDBSchema]:
     schemas = []
     for item in items:
         parent = await group_repo._find_parent_node_by_name(
@@ -92,7 +93,13 @@ async def init():
     )
 
     await Tortoise.generate_schemas()
-    await main()
+    has_groups = await Group.all().exists()
+    has_products = await Product.all().exists()
+    if has_groups is False and has_products is False:
+        await main()
+        print("Import is complete")
+    else:
+        print("data is exists")
 
 
 if __name__ == "__main__":
