@@ -1,6 +1,7 @@
 from typing import Optional, List
 
 from tortoise.exceptions import DoesNotExist, IntegrityError
+from tortoise.query_utils import Q
 
 from src.constants import GroupId
 from src.models import Group, Product, GroupPDModel, ProductPDModel
@@ -67,7 +68,9 @@ class ProductRepo(DBRepo):
     get_schema = ProductPDModel
 
     async def get_nested_products(self, group_id: GroupId) -> List[Product]:
-        groups = await Group.filter(parent_id=group_id).values_list("id", flat=True)
+        groups = await Group.filter(Q(parent_id=group_id) | Q(id=group_id)).values_list(
+            "id", flat=True
+        )
         return await self.model.filter(group_id__in=groups).prefetch_related("group")
 
 
