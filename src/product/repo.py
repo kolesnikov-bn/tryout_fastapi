@@ -44,9 +44,7 @@ class GroupRepo(DBRepo):
     async def _create_new_root(self, schema: GroupSchema) -> GroupPDModel:
         return await self.create(schema)
 
-    async def _find_parent_node_by_name(
-        self, schema: GroupUpdateSchema
-    ) -> GroupPDModel:
+    async def _find_parent_node_by_name(self, schema: GroupSchema) -> GroupPDModel:
         entry = await self.get_obj(name=schema.parent)
         if entry is None:
             raise DoesNotExist(f"Parent node `{schema.parent}` does't exist")

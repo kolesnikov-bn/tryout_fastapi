@@ -1,5 +1,6 @@
 from tortoise import models, fields, Tortoise
 from tortoise.contrib.pydantic import pydantic_model_creator
+from tortoise.fields import SET_NULL
 
 
 class User(models.Model):
@@ -22,13 +23,14 @@ class User(models.Model):
 class Group(models.Model):
     name = fields.CharField(max_length=150, unique=True)
     parent: fields.ForeignKeyNullableRelation["Group"] = fields.ForeignKeyField(
-        "models.Group", related_name="children", null=True
+        "models.Group", related_name="children", null=True, on_delete=SET_NULL
     )
     permissions: fields.ManyToManyRelation["UserGroupPermission"]
+    children: fields.ReverseRelation["Group"]
 
     class PydanticMeta:
         allow_cycles = False
-        exclude = ("children", "group", "products", "permissions")
+        exclude = ("group", "products", "permissions")
 
     def __str__(self):
         return f"<{self.__class__.__name__}>: {self.name}"
@@ -63,6 +65,6 @@ UserInPDModel = pydantic_model_creator(
 )
 PermissionPDModel = pydantic_model_creator(Permission, name="permission")
 GroupPDModel = pydantic_model_creator(
-    Group, name="GroupPDModel", exclude=("children", "permissions")
+    Group, name="GroupPDModel", exclude=("permissions",)
 )
 ProductPDModel = pydantic_model_creator(Product, name="ProductPDModel")

@@ -8,7 +8,10 @@ from tortoise import Tortoise, run_async
 import settings
 from src.models import Group, Product
 from src.product.repo import group_repo, product_repo
-from src.product.schemas import GroupSchema, ProductInDBSchema, GroupUpdateSchema
+from src.product.schemas import (
+    GroupSchema,
+    ProductInDBSchema,
+)
 from src.user.repo import user_repo
 from src.user.schemas import UserCreateSchema
 
@@ -60,7 +63,7 @@ async def make_product_schemas(items: List[CSVItem]) -> List[ProductInDBSchema]:
     schemas = []
     for item in items:
         parent = await group_repo._find_parent_node_by_name(
-            GroupUpdateSchema(name=item.product, parent=item.layer_3)
+            GroupSchema(name=item.product, parent=item.layer_3)
         )
         schema = ProductInDBSchema(name=item.product, group_id=parent.id)
         if schema not in schemas:
