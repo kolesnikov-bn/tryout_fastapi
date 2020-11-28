@@ -39,6 +39,14 @@ class ProductEntity(BaseModel):
         orm_mode = True
 
 
+class ProductUpdateSchema(BaseModel):
+    name: Optional[str]
+    group_id: Optional[GroupId]
+
+    class Config:
+        orm_mode = True
+
+
 class ProductInDBSchema(BaseModel):
     name: str
     group_id: GroupId

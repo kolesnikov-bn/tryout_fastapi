@@ -13,6 +13,7 @@ from src.product.schemas import (
     GroupUpdateSchema,
     ProductInDBSchema,
     ProductListSchema,
+    ProductUpdateSchema,
 )
 from src.user.schemas import UserSchema
 
@@ -96,7 +97,7 @@ async def create_product(
 )
 async def update_product(
     product_id: ProductId,
-    schema: ProductInDBSchema,
+    schema: ProductUpdateSchema,
     user: UserSchema = Depends(get_current_user),
 ):
     return await product_repo.update(schema, id=product_id)

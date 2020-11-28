@@ -67,7 +67,8 @@ class ProductRepo(DBRepo):
     get_schema = ProductPDModel
 
     async def get_nested_products(self, group_id: GroupId) -> List[Product]:
-        return await self.model.filter(group_id=group_id).prefetch_related("group")
+        groups = await Group.filter(parent_id=group_id).values_list("id", flat=True)
+        return await self.model.filter(group_id__in=groups).prefetch_related("group")
 
 
 group_repo = GroupRepo()
