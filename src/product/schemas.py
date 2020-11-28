@@ -24,7 +24,6 @@ class GroupSchema(BaseModel):
 
 class GroupUpdateSchema(BaseModel):
     name: Optional[str] = None
-    parent: Optional[str] = None
     parent_id: Optional[GroupId] = None
 
     class Config:

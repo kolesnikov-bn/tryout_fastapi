@@ -54,10 +54,6 @@ class GroupRepo(DBRepo):
         return await self.get_schema.from_tortoise_orm(entry)
 
     async def _update_node(self, group_id: GroupId, schema: GroupUpdateSchema) -> None:
-        if schema.parent is not None:
-            new_parent = await self._find_parent_node_by_name(schema)
-            schema.parent_id = new_parent.id
-
         await self.model.filter(id=group_id).update(
             **schema.dict(exclude_unset=True, exclude={"parent"})
         )

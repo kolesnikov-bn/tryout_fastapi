@@ -28,7 +28,7 @@ class Group(models.Model):
 
     class PydanticMeta:
         allow_cycles = False
-        exclude = ("children", "group", "products")
+        exclude = ("children", "group", "products", "permissions")
 
     def __str__(self):
         return f"<{self.__class__.__name__}>: {self.name}"
@@ -57,11 +57,11 @@ class Product(models.Model):
 
 Tortoise.init_models(["src.models"], "models")
 
-UserPDModel = pydantic_model_creator(User, name="User")
+UserPDModel = pydantic_model_creator(User, name="User", exclude=("permissions",))
 UserInPDModel = pydantic_model_creator(
     User, name="UserIn", exclude_readonly=True, exclude=("password",)
 )
-PermissionPDModel = pydantic_model_creator(Permission, name="Permission")
+PermissionPDModel = pydantic_model_creator(Permission, name="permission")
 GroupPDModel = pydantic_model_creator(
     Group, name="GroupPDModel", exclude=("children", "permissions")
 )
