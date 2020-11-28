@@ -52,10 +52,3 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserEntity:
         raise credentials_exception
 
     return user
-
-
-async def get_current_active_user(user: UserEntity = Depends(get_current_user)):
-    if user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
-
-    return user

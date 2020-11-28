@@ -9,7 +9,6 @@ class UserEntity(BaseModel):
     last_name: str
     disabled: Optional[bool] = None
 
-
     class Config:
         orm_mode = True
 

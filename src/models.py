@@ -7,7 +7,6 @@ class User(models.Model):
     first_name = fields.CharField(max_length=50, null=True)
     last_name = fields.CharField(max_length=50, null=True)
     password = fields.CharField(max_length=128, null=True)
-    disabled = fields.BooleanField(default=False)
     permissions: fields.ManyToManyRelation["UserGroupPermission"]
 
     def full_name(self) -> str:
@@ -58,10 +57,12 @@ class Product(models.Model):
 
 Tortoise.init_models(["src.models"], "models")
 
-UserPDModel = pydantic_model_creator(User, name="User", exclude=("permissions", ))
+UserPDModel = pydantic_model_creator(User, name="User")
 UserInPDModel = pydantic_model_creator(
     User, name="UserIn", exclude_readonly=True, exclude=("password",)
 )
 PermissionPDModel = pydantic_model_creator(Permission, name="Permission")
-GroupPDModel = pydantic_model_creator(Group, name="GroupPDModel", exclude=("children", "permissions"))
+GroupPDModel = pydantic_model_creator(
+    Group, name="GroupPDModel", exclude=("children", "permissions")
+)
 ProductPDModel = pydantic_model_creator(Product, name="ProductPDModel")

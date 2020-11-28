@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 
-from src.auth.jwt import get_current_active_user
+from src.auth.jwt import get_current_user
 from src.user.repo import user_repo
 from src.user.schemas import UserCreateSchema, UserSchema, UserEntity
 
@@ -20,5 +20,5 @@ async def create_user(schema: UserCreateSchema):
 
 
 @user_router.get("/user/self/", response_model=UserEntity)
-async def try_yourself(user: UserEntity = Depends(get_current_active_user)):
+async def try_yourself(user: UserEntity = Depends(get_current_user)):
     return user
