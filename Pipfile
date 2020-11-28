@@ -12,10 +12,10 @@ uvicorn = "*"
 pytest = "*"
 aerich = "*"
 passlib = "*"
-bcrypt = "*"
 pyjwt = "*"
 python-jose = "*"
 python-multipart = "*"
+loguru = "*"
 
 [requires]
 python_version = "3.9"

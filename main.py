@@ -1,13 +1,17 @@
+import sys
+
 import uvicorn
 from fastapi import FastAPI
-from tortoise import run_async
+from loguru import logger
 from tortoise.contrib.fastapi import register_tortoise
 
 import settings
-from initialize import init
 from src import routers
 from src.auth.router import auth_router
 
+logger.add(
+    sys.stdout, colorize=True, format="<green>{time}</green> <level>{message}</level>"
+)
 app = FastAPI(title="FastAPI example")
 
 app.include_router(routers.api_router, prefix=settings.API)
@@ -23,5 +27,4 @@ register_tortoise(
 
 
 if __name__ == "__main__":
-    run_async(init())
     uvicorn.run(app, host="127.0.0.1", port=8000, debug=settings.DEBUG)

@@ -1,16 +1,21 @@
+import sys
 from dataclasses import dataclass
 from typing import List
 
+from loguru import logger
 from tortoise import Tortoise, run_async
 
 import settings
-from src.models import GroupPDModel, Group, Product
+from src.models import Group, Product
 from src.product.repo import group_repo, product_repo
 from src.product.schemas import GroupSchema, ProductInDBSchema, GroupUpdateSchema
 from src.user.repo import user_repo
 from src.user.schemas import UserCreateSchema
 
-prime_csv_file = settings.BASE_DIR / "init_data.csv"
+logger.add(
+    sys.stdout, colorize=True, format="<green>{time}</green> <level>{message}</level>"
+)
+prime_csv_file = settings.BASE_DIR / "products.csv"
 
 
 @dataclass
@@ -93,14 +98,14 @@ async def create_users():
     await user_repo.create_user(user_schema)
 
 
-async def main():
+async def fill_primary_data():
     csv_data = read_csv(prime_csv_file)
     await fill_primary_group_data(csv_data)
     await fill_primary_product_data(csv_data)
     await create_users()
 
 
-async def init():
+async def main():
     await Tortoise.init(
         db_url=settings.DATABASE_URI,
         modules={"models": settings.APPS_MODELS},
@@ -110,11 +115,15 @@ async def init():
     has_groups = await Group.all().exists()
     has_products = await Product.all().exists()
     if has_groups is False and has_products is False:
-        await main()
-        print("Import is complete")
+        await fill_primary_data()
+        logger.info("Import is complete")
     else:
-        print("data is exists")
+        logger.info("data is exists")
+
+
+def init():
+    run_async(main())
 
 
 if __name__ == "__main__":
-    run_async(init())
+    init()
