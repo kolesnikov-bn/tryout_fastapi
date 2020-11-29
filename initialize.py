@@ -6,7 +6,13 @@ from loguru import logger
 from tortoise import Tortoise, run_async
 
 import settings
-from src.models import Group, Product
+from src.models import (
+    Permission,
+    UserGroupPermission,
+    User,
+    Group,
+    Product,
+)
 from src.product.repo import group_repo, product_repo
 from src.product.schemas import (
     GroupSchema,
@@ -101,11 +107,19 @@ async def create_users():
     await user_repo.create_user(user_schema)
 
 
+async def fill_permissions():
+    permission = await Permission.create(name="admin all fruit")
+    user = await User.get(username="admin")
+    group = await Group.get(name="fruit")
+    await UserGroupPermission.create(user=user, group=group, permission=permission)
+
+
 async def fill_primary_data():
     csv_data = read_csv(prime_csv_file)
     await fill_primary_group_data(csv_data)
     await fill_primary_product_data(csv_data)
     await create_users()
+    await fill_permissions()
 
 
 async def main():

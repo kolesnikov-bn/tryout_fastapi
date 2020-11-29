@@ -6,7 +6,7 @@ from jose import jwt, JWTError
 
 import settings
 from src.auth.schemas import TokenData
-from src.models import User, UserPDModel
+from src.models import User, UserPermPDModel
 from src.user.schemas import UserEntity
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=settings.TOKEN_URL)
@@ -46,7 +46,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserEntity:
     except JWTError:
         raise credentials_exception
 
-    user = await UserPDModel.from_queryset_single(User.get(username=username))
+    user = await UserPermPDModel.from_queryset_single(User.get(username=username))
 
     if user is None:
         raise credentials_exception

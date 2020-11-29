@@ -59,7 +59,8 @@ class Product(models.Model):
 
 Tortoise.init_models(["src.models"], "models")
 
-UserPDModel = pydantic_model_creator(User, name="User", exclude=("permissions",))
+UserPDModel = pydantic_model_creator(User, name="User")
+UserPermPDModel = pydantic_model_creator(User, name="UserPerm", exclude=("password",))
 UserInPDModel = pydantic_model_creator(
     User, name="UserIn", exclude_readonly=True, exclude=("password",)
 )
